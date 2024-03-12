@@ -1,0 +1,62 @@
+#Created a SQL query that pulled the top 5 paying customers by total sum in the pre-established cities.
+This time however, it was done using the CTE method.
+
+WITH total_amount_paid_cte (amount) AS (
+  SELECT E.country, D.city, B.customer_id, B.first_name, B.last_name, SUM(amount) as total_amount_spent 
+  FROM payment.A
+  INNER JOIN customer B ON A.customer_id=B.customer_id
+  INNER JOIN address C ON B.address_id=C.address_id
+  INNER JOIN city D ON C.city_id=D.city_id
+  INNER JOIN country E on D.country_id=E.country_id
+  WHERE D.city IN ('Aurora', 
+                   'Shimoga', 
+                   'Aparecida de Goinia',
+                   'Emeishan', 
+                   'Pontianak',
+                   'Tarsus', 
+                   'Atlixco', 
+                   'Zalantum', 
+                   'Rio Claro',
+                   'Tokat')
+  GROUP BY E.country, D.city, B.customer_id, B.first_name, B.last_name
+  ORDER BY SUM(amount) DESC
+  LIMIT 5
+SELECT AVG(A.amount) AS average_amount_paid
+FROM payment A
+WHERE A.customer_id IN (SELECT customer_id FROM total_amount_paid_cte
+
+#Created an SQL Query that shows the top 10 countries with the most clients in DESC order, as well as a count of previously found 'top customers' (if any). This is
+done with the CTE method
+
+WITH top_customers_cte (customer_id) AS 
+	(SELECT B.customer_id
+        FROM payment A
+        INNER JOIN customer B ON A.customer_id = B.customer_id
+        INNER JOIN address C ON B.address_id = C.address_id
+        INNER JOIN city D ON C.city_id = D.city_id
+        INNER JOIN country E ON D.country_ID = E.country_ID
+        WHERE D.city IN ('Aurora', 
+						 'Shimoga', 
+						 'Aparecida de Goinia', 
+						 'Emeishan', 
+						 'Pontianak', 
+						 'Tarsus', 
+						 'Atlixco', 
+						 'Zalantum', 
+						 'Rio Claro', 
+						 'Tokat')
+        GROUP BY B.customer_id
+        ORDER BY SUM(A.amount) DESC
+        LIMIT 5) 
+SELECT 
+    D.country, 
+    COUNT(DISTINCT A.customer_id) AS total_customer_count, 
+    COUNT(DISTINCT top_customers_cte.customer_id) AS top_customer_count
+FROM customer A
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN city C ON B.city_id = C.city_id
+INNER JOIN country D ON C.country_ID = D.country_ID
+LEFT JOIN top_customers_cte ON A.customer_id = top_customers_cte.customer_id
+GROUP BY D.country
+ORDER BY total_customer_count DESC
+LIMIT 10;
