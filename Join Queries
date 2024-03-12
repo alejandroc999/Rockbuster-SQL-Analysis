@@ -29,3 +29,25 @@ WHERE D.country IN ('India',
 GROUP BY C.city, D.country
 ORDER BY number_of_customers DESC
 LIMIT 10
+
+# SQL Query used to pull the top 5 spending customers located in one of the top 10 cities.
+
+SELECT E.country, D.city, B.customer_id, B.first_name, B.last_name, SUM(amount) as total_amount_spent 
+FROM payment.A
+INNER JOIN customer B ON A.customer_id=B.customer_id
+INNER JOIN address C ON B.address_id=C.address_id
+INNER JOIN city D ON C.city_id=D.city_id
+INNER JOIN country E on D.country_id=E.country_id
+WHERE D.city IN ('Aurora', 
+                 'Shimoga', 
+                 'Aparecida de Goinia',
+                 'Emeishan', 
+                 'Pontianak',
+                 'Tarsus', 
+                 'Atlixco', 
+                 'Zalantum', 
+                 'Rio Claro',
+                 'Tokat')
+GROUP BY E.country, D.city, B.customer_id, B.first_name, B.last_name
+ORDER BY SUM(amount) DESC
+LIMIT 5
