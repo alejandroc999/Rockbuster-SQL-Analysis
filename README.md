@@ -26,3 +26,5 @@ The primary stakeholders for this analysis include:
 Deliverables
 
 The findings of this analysis were compiled into a comprehensive presentation which covers the scoope of the project as well a the findings of such. This report will include actionable insights and recommendations to guide the company's strategy for launching the online video rental service. Additionally, visualizations and dashboards may be created to facilitate understanding and communication of the results.
+
+A Tableau containing a storyboad with some of the visuals used in the report presentation can be found here: https://public.tableau.com/app/profile/alejandro.cisneros3552/viz/RockbusterStealthStoryBoard/RockbusterStealthOnlineLaunch
